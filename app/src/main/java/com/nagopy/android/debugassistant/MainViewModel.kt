@@ -2,12 +2,10 @@ package com.nagopy.android.debugassistant
 
 import android.Manifest
 import android.app.Activity
-import android.app.Application
 import androidx.core.app.ShareCompat
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nagopy.android.debugassistant.data.GlobalSettingRepositoryImpl
-import com.nagopy.android.debugassistant.data.UserPreferencesRepositoryImpl
+import com.nagopy.android.debugassistant.repository.UserPreferencesRepository
 import com.nagopy.android.debugassistant.usecase.DisableAdbWifiUseCase
 import com.nagopy.android.debugassistant.usecase.DisableProxyUseCase
 import com.nagopy.android.debugassistant.usecase.EnableAdbWifiUseCase
@@ -15,51 +13,30 @@ import com.nagopy.android.debugassistant.usecase.EnableProxyUseCase
 import com.nagopy.android.debugassistant.usecase.GetAdbWifiStatusUseCase
 import com.nagopy.android.debugassistant.usecase.GetPermissionStatusUseCase
 import com.nagopy.android.debugassistant.usecase.GetProxyStatusUseCase
-import com.nagopy.android.debugassistant.usecase.interactor.DisableAdbWifiInteractor
-import com.nagopy.android.debugassistant.usecase.interactor.DisableProxyInteractor
-import com.nagopy.android.debugassistant.usecase.interactor.EnableAdbWifiInteractor
-import com.nagopy.android.debugassistant.usecase.interactor.EnableProxyInteractor
-import com.nagopy.android.debugassistant.usecase.interactor.GetAdbWifiStatusInteractor
-import com.nagopy.android.debugassistant.usecase.interactor.GetPermissionStatusInteractor
-import com.nagopy.android.debugassistant.usecase.interactor.GetProxyStatusInteractor
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
+class MainViewModel(
+    private val getProxyStatusUseCase: GetProxyStatusUseCase,
+    private val enableProxyUseCase: EnableProxyUseCase,
+    private val disableProxyUseCase: DisableProxyUseCase,
+    private val getAdbWifiStatusUseCase: GetAdbWifiStatusUseCase,
+    private val enableAdbWifiUseCase: EnableAdbWifiUseCase,
+    private val disableAdbWifiUseCase: DisableAdbWifiUseCase,
+    private val getPermissionStatusUseCase: GetPermissionStatusUseCase,
+    private val userPreferencesRepository: UserPreferencesRepository, // TODO どうするか考える
+) : ViewModel() {
 
-    // TODO DI
-    private val getProxyStatusUseCase: GetProxyStatusUseCase
-    private val enableProxyUseCase: EnableProxyUseCase
-    private val disableProxyUseCase: DisableProxyUseCase
-    private val getAdbWifiStatusUseCase: GetAdbWifiStatusUseCase
-    private val enableAdbWifiUseCase: EnableAdbWifiUseCase
-    private val disableAdbWifiUseCase: DisableAdbWifiUseCase
-    private val getPermissionStatusUseCase: GetPermissionStatusUseCase
-    val proxyHostFlow: MutableStateFlow<String>
-    val proxyPortFlow: MutableStateFlow<String>
+    val proxyHostFlow = MutableStateFlow(userPreferencesRepository.proxyHost)
+    val proxyPortFlow = MutableStateFlow(userPreferencesRepository.proxyPort)
 
     init {
-        val globalSettingsRepository = GlobalSettingRepositoryImpl(application.contentResolver)
-        val userPreferencesRepository =
-            UserPreferencesRepositoryImpl(application.applicationContext)
-        getProxyStatusUseCase = GetProxyStatusInteractor(globalSettingsRepository)
-        enableProxyUseCase =
-            EnableProxyInteractor(globalSettingsRepository, userPreferencesRepository)
-        disableProxyUseCase =
-            DisableProxyInteractor(globalSettingsRepository, userPreferencesRepository)
-        getAdbWifiStatusUseCase = GetAdbWifiStatusInteractor(globalSettingsRepository)
-        enableAdbWifiUseCase = EnableAdbWifiInteractor(globalSettingsRepository)
-        disableAdbWifiUseCase = DisableAdbWifiInteractor(globalSettingsRepository)
-        getPermissionStatusUseCase = GetPermissionStatusInteractor(application.applicationContext)
-
-        proxyHostFlow = MutableStateFlow(userPreferencesRepository.proxyHost)
         viewModelScope.launch {
             proxyHostFlow.collect {
                 userPreferencesRepository.proxyHost = it
             }
         }
-        proxyPortFlow = MutableStateFlow(userPreferencesRepository.proxyPort)
         viewModelScope.launch {
             proxyPortFlow.collect {
                 userPreferencesRepository.proxyPort = it
