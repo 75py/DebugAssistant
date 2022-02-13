@@ -10,8 +10,18 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.nagopy.android.debugassistant.data.GlobalSettingRepositoryImpl
 import com.nagopy.android.debugassistant.data.UserPreferencesRepositoryImpl
-import com.nagopy.android.debugassistant.usecase.*
-import com.nagopy.android.debugassistant.usecase.interactor.*
+import com.nagopy.android.debugassistant.usecase.DisableAdbWifiUseCase
+import com.nagopy.android.debugassistant.usecase.DisableProxyUseCase
+import com.nagopy.android.debugassistant.usecase.EnableAdbWifiUseCase
+import com.nagopy.android.debugassistant.usecase.EnableProxyUseCase
+import com.nagopy.android.debugassistant.usecase.GetAdbWifiStatusUseCase
+import com.nagopy.android.debugassistant.usecase.GetProxyStatusUseCase
+import com.nagopy.android.debugassistant.usecase.interactor.DisableAdbWifiInteractor
+import com.nagopy.android.debugassistant.usecase.interactor.DisableProxyInteractor
+import com.nagopy.android.debugassistant.usecase.interactor.EnableAdbWifiInteractor
+import com.nagopy.android.debugassistant.usecase.interactor.EnableProxyInteractor
+import com.nagopy.android.debugassistant.usecase.interactor.GetAdbWifiStatusInteractor
+import com.nagopy.android.debugassistant.usecase.interactor.GetProxyStatusInteractor
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -108,5 +118,4 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
         updateAdbWifiStatus()
     }
-
 }

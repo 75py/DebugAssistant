@@ -21,7 +21,12 @@ class GetAdbWifiStatusInteractorTest {
 
     @Test
     fun isProxyEnabled() {
-        every { globalSettingsRepository.getInt(any(), any()) } returns GlobalSettingsRepository.SETTING_OFF
+        every {
+            globalSettingsRepository.getInt(
+                any(),
+                any()
+            )
+        } returns GlobalSettingsRepository.SETTING_OFF
         kotlin.test.assertFalse(getAdbWifiStatusInteractor.isAdbWifiEnabled())
         verify {
             globalSettingsRepository.getInt(
@@ -32,7 +37,12 @@ class GetAdbWifiStatusInteractorTest {
 
         clearAllMocks()
 
-        every { globalSettingsRepository.getInt(any(), any()) } returns GlobalSettingsRepository.SETTING_ON
+        every {
+            globalSettingsRepository.getInt(
+                any(),
+                any()
+            )
+        } returns GlobalSettingsRepository.SETTING_ON
         kotlin.test.assertTrue(getAdbWifiStatusInteractor.isAdbWifiEnabled())
         verify {
             globalSettingsRepository.getInt(

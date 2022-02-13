@@ -13,5 +13,4 @@ class EnableAdbWifiInteractor(
             GlobalSettingsRepository.SETTING_ON
         )
     }
-
 }

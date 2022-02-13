@@ -12,5 +12,4 @@ class GetProxyStatusInteractor(
         val currentValue = globalSettingsRepository.getString(Settings.Global.HTTP_PROXY)
         return !currentValue.isNullOrEmpty() && currentValue != GlobalSettingsRepository.DISABLE_PROXY_VALUE
     }
-
 }

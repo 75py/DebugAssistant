@@ -4,10 +4,24 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Surface
+import androidx.compose.material.Switch
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -48,7 +62,8 @@ class MainActivity : ComponentActivity() {
                             value = proxyHost.value,
                             onValueChanged = {
                                 mainViewModel.proxyHostFlow.value = it
-                            })
+                            }
+                        )
 
                         Spacer(modifier = Modifier.height(8.dp))
 
@@ -58,7 +73,8 @@ class MainActivity : ComponentActivity() {
                             value = proxyPort.value,
                             onValueChanged = {
                                 mainViewModel.proxyPortFlow.value = it
-                            })
+                            }
+                        )
 
                         Spacer(modifier = Modifier.height(16.dp))
 
@@ -155,15 +171,16 @@ fun ProxyPort(enabled: Boolean, value: String, onValueChanged: (String) -> Unit)
 fun ProxyToggleSwitch(enabled: Boolean, checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
     val alpha = if (enabled) LocalContentAlpha.current else ContentAlpha.disabled
 
-    Row(Modifier
-        .toggleable(
-            enabled = enabled,
-            value = checked,
-            role = Role.Switch,
-            onValueChange = { onCheckedChange(it) }
-        )
-        .padding(16.dp)
-        .fillMaxWidth()
+    Row(
+        modifier = Modifier
+            .toggleable(
+                enabled = enabled,
+                value = checked,
+                role = Role.Switch,
+                onValueChange = { onCheckedChange(it) }
+            )
+            .padding(16.dp)
+            .fillMaxWidth()
     ) {
         Text(text = "Use Proxy", modifier = Modifier.alpha(alpha))
         Spacer(modifier = Modifier.width(8.dp))
@@ -171,20 +188,20 @@ fun ProxyToggleSwitch(enabled: Boolean, checked: Boolean, onCheckedChange: (Bool
     }
 }
 
-
 @Composable
 fun AdbWifiSwitch(enabled: Boolean, checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
     val alpha = if (enabled) LocalContentAlpha.current else ContentAlpha.disabled
 
-    Row(Modifier
-        .toggleable(
-            enabled = enabled,
-            value = checked,
-            role = Role.Switch,
-            onValueChange = { onCheckedChange(it) }
-        )
-        .padding(16.dp)
-        .fillMaxWidth()
+    Row(
+        Modifier
+            .toggleable(
+                enabled = enabled,
+                value = checked,
+                role = Role.Switch,
+                onValueChange = { onCheckedChange(it) }
+            )
+            .padding(16.dp)
+            .fillMaxWidth()
     ) {
         Text(text = "Adb over Wifi", modifier = Modifier.alpha(alpha))
         Spacer(modifier = Modifier.width(8.dp))

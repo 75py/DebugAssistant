@@ -22,5 +22,4 @@ class GlobalSettingRepositoryImpl(private val resolver: ContentResolver) :
     override fun getInt(name: String, def: Int): Int {
         return Settings.Global.getInt(resolver, name, def)
     }
-
 }
