@@ -3,9 +3,7 @@ package com.nagopy.android.debugassistant
 import android.Manifest
 import android.app.Activity
 import android.app.Application
-import android.content.pm.PackageManager
 import androidx.core.app.ShareCompat
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.nagopy.android.debugassistant.data.GlobalSettingRepositoryImpl
@@ -15,12 +13,14 @@ import com.nagopy.android.debugassistant.usecase.DisableProxyUseCase
 import com.nagopy.android.debugassistant.usecase.EnableAdbWifiUseCase
 import com.nagopy.android.debugassistant.usecase.EnableProxyUseCase
 import com.nagopy.android.debugassistant.usecase.GetAdbWifiStatusUseCase
+import com.nagopy.android.debugassistant.usecase.GetPermissionStatusUseCase
 import com.nagopy.android.debugassistant.usecase.GetProxyStatusUseCase
 import com.nagopy.android.debugassistant.usecase.interactor.DisableAdbWifiInteractor
 import com.nagopy.android.debugassistant.usecase.interactor.DisableProxyInteractor
 import com.nagopy.android.debugassistant.usecase.interactor.EnableAdbWifiInteractor
 import com.nagopy.android.debugassistant.usecase.interactor.EnableProxyInteractor
 import com.nagopy.android.debugassistant.usecase.interactor.GetAdbWifiStatusInteractor
+import com.nagopy.android.debugassistant.usecase.interactor.GetPermissionStatusInteractor
 import com.nagopy.android.debugassistant.usecase.interactor.GetProxyStatusInteractor
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
@@ -35,6 +35,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val getAdbWifiStatusUseCase: GetAdbWifiStatusUseCase
     private val enableAdbWifiUseCase: EnableAdbWifiUseCase
     private val disableAdbWifiUseCase: DisableAdbWifiUseCase
+    private val getPermissionStatusUseCase: GetPermissionStatusUseCase
     val proxyHostFlow: MutableStateFlow<String>
     val proxyPortFlow: MutableStateFlow<String>
 
@@ -50,6 +51,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         getAdbWifiStatusUseCase = GetAdbWifiStatusInteractor(globalSettingsRepository)
         enableAdbWifiUseCase = EnableAdbWifiInteractor(globalSettingsRepository)
         disableAdbWifiUseCase = DisableAdbWifiInteractor(globalSettingsRepository)
+        getPermissionStatusUseCase = GetPermissionStatusInteractor(application.applicationContext)
 
         proxyHostFlow = MutableStateFlow(userPreferencesRepository.proxyHost)
         viewModelScope.launch {
@@ -84,10 +86,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private fun updatePermissionStatus() {
-        isPermissionGranted.value = ContextCompat.checkSelfPermission(
-            getApplication(),
-            Manifest.permission.WRITE_SECURE_SETTINGS
-        ) == PackageManager.PERMISSION_GRANTED
+        isPermissionGranted.value =
+            getPermissionStatusUseCase.isPermissionGranted(Manifest.permission.WRITE_SECURE_SETTINGS)
     }
 
     fun onAdbCommandClicked(activity: Activity) {
