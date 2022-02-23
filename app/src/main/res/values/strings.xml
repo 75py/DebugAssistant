@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Debug Assistant</string>
+    <string name="licenses">Licenses</string>
 </resources>

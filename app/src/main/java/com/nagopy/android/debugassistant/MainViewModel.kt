@@ -2,9 +2,11 @@ package com.nagopy.android.debugassistant
 
 import android.Manifest
 import android.app.Activity
+import android.content.Intent
 import androidx.core.app.ShareCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.nagopy.android.debugassistant.repository.UserPreferencesRepository
 import com.nagopy.android.debugassistant.usecase.DisableAdbUseCase
 import com.nagopy.android.debugassistant.usecase.DisableProxyUseCase
@@ -100,5 +102,9 @@ class MainViewModel(
         }
 
         updateAdbStatus()
+    }
+
+    fun onLicensesMenuClicked(activity: Activity) {
+        activity.startActivity(Intent(activity, OssLicensesMenuActivity::class.java))
     }
 }
