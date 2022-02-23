@@ -1,5 +1,6 @@
 package com.nagopy.android.debugassistant.usecase.interactor
 
+import android.provider.Settings
 import com.nagopy.android.debugassistant.repository.GlobalSettingsRepository
 import io.mockk.every
 import io.mockk.mockk
@@ -7,39 +8,39 @@ import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
 
-class EnableAdbWifiInteractorTest {
+class DisableAdbInteractorTest {
 
-    private lateinit var enableAdbWifiInteractor: EnableAdbWifiInteractor
+    private lateinit var disableAdbInteractor: DisableAdbInteractor
     private lateinit var globalSettingsRepository: GlobalSettingsRepository
 
     @Before
     fun setUp() {
         globalSettingsRepository = mockk(relaxed = true)
-        enableAdbWifiInteractor = EnableAdbWifiInteractor(globalSettingsRepository)
+        disableAdbInteractor = DisableAdbInteractor(globalSettingsRepository)
     }
 
     @Test
-    fun enableAdbWifi_putSuccess() {
+    fun disableAdb_putSuccess() {
         every { globalSettingsRepository.putInt(any(), any()) } returns true
-        val ret = enableAdbWifiInteractor.enableAdbWifi()
+        val ret = disableAdbInteractor.disableAdb()
         kotlin.test.assertTrue(ret)
         verify {
             globalSettingsRepository.putInt(
-                GlobalSettingsRepository.ADB_WIFI_ENABLED,
-                GlobalSettingsRepository.SETTING_ON
+                Settings.Global.ADB_ENABLED,
+                GlobalSettingsRepository.SETTING_OFF
             )
         }
     }
 
     @Test
-    fun enableAdbWifi_putError() {
+    fun disableAdb_putError() {
         every { globalSettingsRepository.putInt(any(), any()) } returns false
-        val ret = enableAdbWifiInteractor.enableAdbWifi()
+        val ret = disableAdbInteractor.disableAdb()
         kotlin.test.assertFalse(ret)
         verify {
             globalSettingsRepository.putInt(
-                GlobalSettingsRepository.ADB_WIFI_ENABLED,
-                GlobalSettingsRepository.SETTING_ON
+                Settings.Global.ADB_ENABLED,
+                GlobalSettingsRepository.SETTING_OFF
             )
         }
     }

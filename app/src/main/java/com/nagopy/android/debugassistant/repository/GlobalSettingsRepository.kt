@@ -14,7 +14,5 @@ interface GlobalSettingsRepository {
         const val DISABLE_PROXY_VALUE = ":0"
         const val SETTING_ON = 1
         const val SETTING_OFF = 0
-
-        const val ADB_WIFI_ENABLED = "adb_wifi_enabled"
     }
 }

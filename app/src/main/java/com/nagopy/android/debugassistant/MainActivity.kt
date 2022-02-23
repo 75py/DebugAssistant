@@ -87,12 +87,12 @@ class MainActivity : ComponentActivity() {
                         }
 
                         Spacer(modifier = Modifier.height(16.dp))
-                        val isAdbWifiEnabled = mainViewModel.isAdbWifiEnabled.collectAsState()
-                        AdbWifiSwitch(
+                        val isAdbEnabled = mainViewModel.isAdbEnabled.collectAsState()
+                        AdbSwitch(
                             enabled = isPermissionGranted.value,
-                            checked = isAdbWifiEnabled.value,
+                            checked = isAdbEnabled.value,
                         ) {
-                            mainViewModel.onAdbWifiSwitchClicked(it)
+                            mainViewModel.onAdbSwitchClicked(it)
                         }
                     }
                 }
@@ -189,7 +189,7 @@ fun ProxyToggleSwitch(enabled: Boolean, checked: Boolean, onCheckedChange: (Bool
 }
 
 @Composable
-fun AdbWifiSwitch(enabled: Boolean, checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
+fun AdbSwitch(enabled: Boolean, checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
     val alpha = if (enabled) LocalContentAlpha.current else ContentAlpha.disabled
 
     Row(
@@ -203,7 +203,7 @@ fun AdbWifiSwitch(enabled: Boolean, checked: Boolean, onCheckedChange: (Boolean)
             .padding(16.dp)
             .fillMaxWidth()
     ) {
-        Text(text = "Adb over Wifi", modifier = Modifier.alpha(alpha))
+        Text(text = "Adb", modifier = Modifier.alpha(alpha))
         Spacer(modifier = Modifier.width(8.dp))
         Switch(enabled = enabled, checked = checked, onCheckedChange = null)
     }

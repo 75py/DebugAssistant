@@ -6,11 +6,11 @@ import androidx.core.app.ShareCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nagopy.android.debugassistant.repository.UserPreferencesRepository
-import com.nagopy.android.debugassistant.usecase.DisableAdbWifiUseCase
+import com.nagopy.android.debugassistant.usecase.DisableAdbUseCase
 import com.nagopy.android.debugassistant.usecase.DisableProxyUseCase
-import com.nagopy.android.debugassistant.usecase.EnableAdbWifiUseCase
+import com.nagopy.android.debugassistant.usecase.EnableAdbUseCase
 import com.nagopy.android.debugassistant.usecase.EnableProxyUseCase
-import com.nagopy.android.debugassistant.usecase.GetAdbWifiStatusUseCase
+import com.nagopy.android.debugassistant.usecase.GetAdbStatusUseCase
 import com.nagopy.android.debugassistant.usecase.GetPermissionStatusUseCase
 import com.nagopy.android.debugassistant.usecase.GetProxyStatusUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,9 +21,9 @@ class MainViewModel(
     private val getProxyStatusUseCase: GetProxyStatusUseCase,
     private val enableProxyUseCase: EnableProxyUseCase,
     private val disableProxyUseCase: DisableProxyUseCase,
-    private val getAdbWifiStatusUseCase: GetAdbWifiStatusUseCase,
-    private val enableAdbWifiUseCase: EnableAdbWifiUseCase,
-    private val disableAdbWifiUseCase: DisableAdbWifiUseCase,
+    private val getAdbStatusUseCase: GetAdbStatusUseCase,
+    private val enableAdbUseCase: EnableAdbUseCase,
+    private val disableAdbUseCase: DisableAdbUseCase,
     private val getPermissionStatusUseCase: GetPermissionStatusUseCase,
     private val userPreferencesRepository: UserPreferencesRepository, // TODO どうするか考える
 ) : ViewModel() {
@@ -46,20 +46,20 @@ class MainViewModel(
 
     val isPermissionGranted = MutableStateFlow(false)
     val isProxyEnabled = MutableStateFlow(false)
-    val isAdbWifiEnabled = MutableStateFlow(false)
+    val isAdbEnabled = MutableStateFlow(false)
 
     fun updateStatus() {
         updatePermissionStatus()
         updateProxyStatus()
-        updateAdbWifiStatus()
+        updateAdbStatus()
     }
 
     private fun updateProxyStatus() {
         isProxyEnabled.value = getProxyStatusUseCase.isProxyEnabled()
     }
 
-    private fun updateAdbWifiStatus() {
-        isAdbWifiEnabled.value = getAdbWifiStatusUseCase.isAdbWifiEnabled()
+    private fun updateAdbStatus() {
+        isAdbEnabled.value = getAdbStatusUseCase.isAdbEnabled()
     }
 
     private fun updatePermissionStatus() {
@@ -86,13 +86,13 @@ class MainViewModel(
         updateProxyStatus()
     }
 
-    fun onAdbWifiSwitchClicked(checked: Boolean) {
+    fun onAdbSwitchClicked(checked: Boolean) {
         if (checked) {
-            enableAdbWifiUseCase.enableAdbWifi()
+            enableAdbUseCase.enableAdb()
         } else {
-            disableAdbWifiUseCase.disableAdbWifi()
+            disableAdbUseCase.disableAdb()
         }
 
-        updateAdbWifiStatus()
+        updateAdbStatus()
     }
 }

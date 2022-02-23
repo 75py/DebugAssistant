@@ -1,15 +1,16 @@
 package com.nagopy.android.debugassistant.usecase.interactor
 
+import android.provider.Settings
 import com.nagopy.android.debugassistant.repository.GlobalSettingsRepository
-import com.nagopy.android.debugassistant.usecase.DisableAdbWifiUseCase
+import com.nagopy.android.debugassistant.usecase.DisableAdbUseCase
 
-class DisableAdbWifiInteractor(
+class DisableAdbInteractor(
     private val globalSettingsRepository: GlobalSettingsRepository
-) : DisableAdbWifiUseCase {
+) : DisableAdbUseCase {
 
-    override fun disableAdbWifi(): Boolean {
+    override fun disableAdb(): Boolean {
         return globalSettingsRepository.putInt(
-            GlobalSettingsRepository.ADB_WIFI_ENABLED,
+            Settings.Global.ADB_ENABLED,
             GlobalSettingsRepository.SETTING_OFF
         )
     }

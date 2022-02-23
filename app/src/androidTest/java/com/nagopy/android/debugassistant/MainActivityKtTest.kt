@@ -109,10 +109,10 @@ class MainActivityKtTest {
     }
 
     @Test
-    fun adbWifiSwitch() {
+    fun adbSwitch() {
         var i = 0
         composeTestRule.setContent {
-            AdbWifiSwitch(enabled = true, checked = true, onCheckedChange = { i++ })
+            AdbSwitch(enabled = true, checked = true, onCheckedChange = { i++ })
         }
 
         val clickable = composeTestRule.onNode(hasClickAction())
@@ -126,15 +126,15 @@ class MainActivityKtTest {
     }
 
     @Test
-    fun adbWifiSwitch_disabled() {
+    fun adbSwitch_disabled() {
         composeTestRule.setContent {
-            AdbWifiSwitch(enabled = false, checked = false, onCheckedChange = { })
+            AdbSwitch(enabled = false, checked = false, onCheckedChange = { })
         }
         composeTestRule.onNode(hasClickAction())
             .assertIsNotEnabled()
             .assertIsOff()
             .assertIsDisplayed()
-        composeTestRule.onNodeWithText("Adb over Wifi")
+        composeTestRule.onNodeWithText("Adb")
             .assertIsDisplayed()
     }
 }

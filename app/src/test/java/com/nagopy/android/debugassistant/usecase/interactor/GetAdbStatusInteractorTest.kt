@@ -1,5 +1,6 @@
 package com.nagopy.android.debugassistant.usecase.interactor
 
+import android.provider.Settings
 import com.nagopy.android.debugassistant.repository.GlobalSettingsRepository
 import io.mockk.clearAllMocks
 import io.mockk.every
@@ -8,15 +9,15 @@ import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
 
-class GetAdbWifiStatusInteractorTest {
-    private lateinit var getAdbWifiStatusInteractor: GetAdbWifiStatusInteractor
+class GetAdbStatusInteractorTest {
+    private lateinit var getAdbStatusInteractor: GetAdbStatusInteractor
     private lateinit var globalSettingsRepository: GlobalSettingsRepository
 
     @Before
     fun setUp() {
         globalSettingsRepository = mockk(relaxed = true)
-        getAdbWifiStatusInteractor =
-            GetAdbWifiStatusInteractor(globalSettingsRepository)
+        getAdbStatusInteractor =
+            GetAdbStatusInteractor(globalSettingsRepository)
     }
 
     @Test
@@ -27,10 +28,10 @@ class GetAdbWifiStatusInteractorTest {
                 any()
             )
         } returns GlobalSettingsRepository.SETTING_OFF
-        kotlin.test.assertFalse(getAdbWifiStatusInteractor.isAdbWifiEnabled())
+        kotlin.test.assertFalse(getAdbStatusInteractor.isAdbEnabled())
         verify {
             globalSettingsRepository.getInt(
-                GlobalSettingsRepository.ADB_WIFI_ENABLED,
+                Settings.Global.ADB_ENABLED,
                 GlobalSettingsRepository.SETTING_OFF
             )
         }
@@ -43,10 +44,10 @@ class GetAdbWifiStatusInteractorTest {
                 any()
             )
         } returns GlobalSettingsRepository.SETTING_ON
-        kotlin.test.assertTrue(getAdbWifiStatusInteractor.isAdbWifiEnabled())
+        kotlin.test.assertTrue(getAdbStatusInteractor.isAdbEnabled())
         verify {
             globalSettingsRepository.getInt(
-                GlobalSettingsRepository.ADB_WIFI_ENABLED,
+                Settings.Global.ADB_ENABLED,
                 GlobalSettingsRepository.SETTING_OFF
             )
         }

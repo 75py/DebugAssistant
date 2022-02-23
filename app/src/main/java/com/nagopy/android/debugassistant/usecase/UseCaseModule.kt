@@ -1,10 +1,10 @@
 package com.nagopy.android.debugassistant.usecase
 
-import com.nagopy.android.debugassistant.usecase.interactor.DisableAdbWifiInteractor
+import com.nagopy.android.debugassistant.usecase.interactor.DisableAdbInteractor
 import com.nagopy.android.debugassistant.usecase.interactor.DisableProxyInteractor
-import com.nagopy.android.debugassistant.usecase.interactor.EnableAdbWifiInteractor
+import com.nagopy.android.debugassistant.usecase.interactor.EnableAdbInteractor
 import com.nagopy.android.debugassistant.usecase.interactor.EnableProxyInteractor
-import com.nagopy.android.debugassistant.usecase.interactor.GetAdbWifiStatusInteractor
+import com.nagopy.android.debugassistant.usecase.interactor.GetAdbStatusInteractor
 import com.nagopy.android.debugassistant.usecase.interactor.GetPermissionStatusInteractor
 import com.nagopy.android.debugassistant.usecase.interactor.GetProxyStatusInteractor
 import org.koin.dsl.module
@@ -17,11 +17,11 @@ val useCaseModule = module {
 
     single<DisableProxyUseCase> { DisableProxyInteractor(get(), get()) }
 
-    single<GetAdbWifiStatusUseCase> { GetAdbWifiStatusInteractor(get()) }
+    single<GetAdbStatusUseCase> { GetAdbStatusInteractor(get()) }
 
-    single<EnableAdbWifiUseCase> { EnableAdbWifiInteractor(get()) }
+    single<EnableAdbUseCase> { EnableAdbInteractor(get()) }
 
-    single<DisableAdbWifiUseCase> { DisableAdbWifiInteractor(get()) }
+    single<DisableAdbUseCase> { DisableAdbInteractor(get()) }
 
     single<GetPermissionStatusUseCase> { GetPermissionStatusInteractor(get()) }
 }
