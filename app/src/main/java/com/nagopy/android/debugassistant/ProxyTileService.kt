@@ -25,7 +25,9 @@ class ProxyTileService : TileService() {
 
     private fun refresh() {
         qsTile.state =
-            if (getPermissionStatusUseCase.isPermissionGranted(Manifest.permission.WRITE_SECURE_SETTINGS)) {
+            if (getPermissionStatusUseCase.isPermissionGranted(Manifest.permission.WRITE_SECURE_SETTINGS) &&
+                getUserProxyInfoUseCase.getUserProxyInfo().isAvailable()
+            ) {
                 if (getProxyStatusUseCase.isProxyEnabled()) {
                     Tile.STATE_ACTIVE
                 } else {
