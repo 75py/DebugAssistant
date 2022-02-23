@@ -7,6 +7,7 @@ import com.nagopy.android.debugassistant.usecase.interactor.EnableProxyInteracto
 import com.nagopy.android.debugassistant.usecase.interactor.GetAdbStatusInteractor
 import com.nagopy.android.debugassistant.usecase.interactor.GetPermissionStatusInteractor
 import com.nagopy.android.debugassistant.usecase.interactor.GetProxyStatusInteractor
+import com.nagopy.android.debugassistant.usecase.interactor.GetUserProxyInfoInteractor
 import org.koin.dsl.module
 
 val useCaseModule = module {
@@ -24,4 +25,6 @@ val useCaseModule = module {
     single<DisableAdbUseCase> { DisableAdbInteractor(get()) }
 
     single<GetPermissionStatusUseCase> { GetPermissionStatusInteractor(get()) }
+
+    single<GetUserProxyInfoUseCase> { GetUserProxyInfoInteractor(get()) }
 }

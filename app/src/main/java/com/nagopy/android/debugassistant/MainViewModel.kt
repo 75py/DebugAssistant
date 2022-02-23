@@ -13,6 +13,7 @@ import com.nagopy.android.debugassistant.usecase.EnableProxyUseCase
 import com.nagopy.android.debugassistant.usecase.GetAdbStatusUseCase
 import com.nagopy.android.debugassistant.usecase.GetPermissionStatusUseCase
 import com.nagopy.android.debugassistant.usecase.GetProxyStatusUseCase
+import com.nagopy.android.debugassistant.usecase.GetUserProxyInfoUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -25,13 +26,18 @@ class MainViewModel(
     private val enableAdbUseCase: EnableAdbUseCase,
     private val disableAdbUseCase: DisableAdbUseCase,
     private val getPermissionStatusUseCase: GetPermissionStatusUseCase,
+    private val getUserProxyInfoUseCase: GetUserProxyInfoUseCase,
     private val userPreferencesRepository: UserPreferencesRepository, // TODO どうするか考える
 ) : ViewModel() {
 
-    val proxyHostFlow = MutableStateFlow(userPreferencesRepository.proxyHost)
-    val proxyPortFlow = MutableStateFlow(userPreferencesRepository.proxyPort)
+    val proxyHostFlow: MutableStateFlow<String>
+    val proxyPortFlow: MutableStateFlow<String>
 
     init {
+        val proxyInfo = getUserProxyInfoUseCase.getUserProxyInfo()
+        proxyHostFlow = MutableStateFlow(proxyInfo.host)
+        proxyPortFlow = MutableStateFlow(proxyInfo.port)
+
         viewModelScope.launch {
             proxyHostFlow.collect {
                 userPreferencesRepository.proxyHost = it

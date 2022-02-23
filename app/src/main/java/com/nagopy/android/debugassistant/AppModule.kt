@@ -8,5 +8,5 @@ import org.koin.dsl.module
 val appModule = module {
     single<ContentResolver> { androidContext().contentResolver }
 
-    viewModel { MainViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { MainViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
 }

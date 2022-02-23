@@ -8,11 +8,11 @@ import android.os.Looper
 import android.provider.Settings
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
-import com.nagopy.android.debugassistant.repository.UserPreferencesRepository
 import com.nagopy.android.debugassistant.usecase.DisableProxyUseCase
 import com.nagopy.android.debugassistant.usecase.EnableProxyUseCase
 import com.nagopy.android.debugassistant.usecase.GetPermissionStatusUseCase
 import com.nagopy.android.debugassistant.usecase.GetProxyStatusUseCase
+import com.nagopy.android.debugassistant.usecase.GetUserProxyInfoUseCase
 import org.koin.android.ext.android.inject
 
 class ProxyTileService : TileService() {
@@ -21,7 +21,7 @@ class ProxyTileService : TileService() {
     private val getProxyStatusUseCase: GetProxyStatusUseCase by inject()
     private val enableProUseCase: EnableProxyUseCase by inject()
     private val disableProxyUseCase: DisableProxyUseCase by inject()
-    private val userPreferencesRepository: UserPreferencesRepository by inject() // TODO 良い感じにする
+    private val getUserProxyInfoUseCase: GetUserProxyInfoUseCase by inject()
 
     private fun refresh() {
         qsTile.state =
@@ -59,9 +59,10 @@ class ProxyTileService : TileService() {
                 disableProxyUseCase.disableProxy()
             }
             Tile.STATE_INACTIVE -> {
+                val proxyInfo = getUserProxyInfoUseCase.getUserProxyInfo()
                 enableProUseCase.enableProxy(
-                    userPreferencesRepository.proxyHost,
-                    userPreferencesRepository.proxyPort
+                    proxyInfo.host,
+                    proxyInfo.port
                 )
             }
         }
