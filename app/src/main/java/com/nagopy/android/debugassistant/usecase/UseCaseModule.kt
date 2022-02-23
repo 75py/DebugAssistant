@@ -14,9 +14,9 @@ val useCaseModule = module {
 
     single<GetProxyStatusUseCase> { GetProxyStatusInteractor(get()) }
 
-    single<EnableProxyUseCase> { EnableProxyInteractor(get(), get()) }
+    single<EnableProxyUseCase> { EnableProxyInteractor(get()) }
 
-    single<DisableProxyUseCase> { DisableProxyInteractor(get(), get()) }
+    single<DisableProxyUseCase> { DisableProxyInteractor(get()) }
 
     single<GetAdbStatusUseCase> { GetAdbStatusInteractor(get()) }
 

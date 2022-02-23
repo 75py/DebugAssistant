@@ -2,11 +2,9 @@ package com.nagopy.android.debugassistant.usecase.interactor
 
 import android.provider.Settings
 import com.nagopy.android.debugassistant.repository.GlobalSettingsRepository
-import com.nagopy.android.debugassistant.repository.UserPreferencesRepository
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import io.mockk.verifyAll
 import org.junit.Before
 import org.junit.Test
 import kotlin.test.assertFalse
@@ -16,14 +14,12 @@ class DisableProxyInteractorTest {
 
     private lateinit var disableProxyInteractor: DisableProxyInteractor
     private lateinit var globalSettingsRepository: GlobalSettingsRepository
-    private lateinit var userPreferencesRepository: UserPreferencesRepository
 
     @Before
     fun setUp() {
         globalSettingsRepository = mockk(relaxed = true)
-        userPreferencesRepository = mockk(relaxed = true)
         disableProxyInteractor =
-            DisableProxyInteractor(globalSettingsRepository, userPreferencesRepository)
+            DisableProxyInteractor(globalSettingsRepository)
     }
 
     @Test
@@ -31,13 +27,11 @@ class DisableProxyInteractorTest {
         every { globalSettingsRepository.putString(any(), any()) } returns true
         val ret = disableProxyInteractor.disableProxy()
         assertTrue(ret)
-        verifyAll {
+        verify {
             globalSettingsRepository.putString(
                 Settings.Global.HTTP_PROXY,
                 GlobalSettingsRepository.DISABLE_PROXY_VALUE
             )
-            userPreferencesRepository.proxyHost = ""
-            userPreferencesRepository.proxyPort = ""
         }
     }
 
@@ -51,10 +45,6 @@ class DisableProxyInteractorTest {
                 Settings.Global.HTTP_PROXY,
                 GlobalSettingsRepository.DISABLE_PROXY_VALUE
             )
-        }
-        verify(inverse = true) {
-            userPreferencesRepository.proxyHost = ""
-            userPreferencesRepository.proxyPort = ""
         }
     }
 }
