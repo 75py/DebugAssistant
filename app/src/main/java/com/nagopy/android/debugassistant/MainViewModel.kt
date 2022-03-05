@@ -2,9 +2,10 @@ package com.nagopy.android.debugassistant
 
 import android.Manifest
 import android.app.Activity
+import android.app.Application
 import android.content.Intent
 import androidx.core.app.ShareCompat
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.nagopy.android.debugassistant.repository.UserPreferencesRepository
@@ -21,6 +22,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MainViewModel(
+    application: Application,
     private val getProxyStatusUseCase: GetProxyStatusUseCase,
     private val enableProxyUseCase: EnableProxyUseCase,
     private val disableProxyUseCase: DisableProxyUseCase,
@@ -30,7 +32,7 @@ class MainViewModel(
     private val getPermissionStatusUseCase: GetPermissionStatusUseCase,
     private val getUserProxyInfoUseCase: GetUserProxyInfoUseCase,
     private val userPreferencesRepository: UserPreferencesRepository, // TODO どうするか考える
-) : ViewModel() {
+) : AndroidViewModel(application) {
 
     val proxyHostFlow: MutableStateFlow<String>
     val proxyPortFlow: MutableStateFlow<String>
@@ -75,13 +77,16 @@ class MainViewModel(
             getPermissionStatusUseCase.isPermissionGranted(Manifest.permission.WRITE_SECURE_SETTINGS)
     }
 
-    fun onAdbCommandClicked(activity: Activity) {
-        activity.startActivity(
-            ShareCompat.IntentBuilder(activity)
-                .setText("adb shell pm grant ${BuildConfig.APPLICATION_ID} android.permission.WRITE_SECURE_SETTINGS")
-                .setType("text/plain")
-                .intent
-        )
+    fun onAdbCommandClicked() {
+        getApplication<Application>().let { application ->
+            application.startActivity(
+                ShareCompat.IntentBuilder(application)
+                    .setText("adb shell pm grant ${BuildConfig.APPLICATION_ID} android.permission.WRITE_SECURE_SETTINGS")
+                    .setType("text/plain")
+                    .intent
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            )
+        }
     }
 
     fun onProxySwitchClicked(checked: Boolean) {

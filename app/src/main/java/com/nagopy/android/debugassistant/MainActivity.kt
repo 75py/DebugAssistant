@@ -69,7 +69,7 @@ class MainActivity : ComponentActivity() {
                             val isPermissionGranted = mainViewModel.isPermissionGranted.collectAsState()
                             if (!isPermissionGranted.value) {
                                 PermissionErrorMessage(onAdbCommandClicked = {
-                                    mainViewModel.onAdbCommandClicked(this@MainActivity)
+                                    mainViewModel.onAdbCommandClicked()
                                 })
                             }
 
