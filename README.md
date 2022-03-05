@@ -7,7 +7,7 @@ Assists Android Developers!
 * Proxy toggle in quick settings
 * Adb toggle in quick settings
 
-<img src="images/features.png" width="280">
+<img src="images/features_1.png" width="280"> <img src="images/features_2.png" width="280">
 
 ## Install
 
@@ -17,8 +17,7 @@ Assists Android Developers!
 3. Input your proxy settings
 4. Add quick setting icons
 
-<img src="images/install_1.png" width="280">
-<img src="images/install_2.png" width="280">
+<img src="images/install_1.png" width="280"> <img src="images/install_2.png" width="280">
 
 ## License
 
