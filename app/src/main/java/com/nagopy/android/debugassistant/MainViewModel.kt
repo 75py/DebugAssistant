@@ -109,7 +109,12 @@ class MainViewModel(
         updateAdbStatus()
     }
 
-    fun onLicensesMenuClicked(activity: Activity) {
-        activity.startActivity(Intent(activity, OssLicensesMenuActivity::class.java))
+    fun onLicensesButtonClicked() {
+        getApplication<Application>().let { application ->
+            application.startActivity(
+                Intent(application, OssLicensesMenuActivity::class.java)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            )
+        }
     }
 }

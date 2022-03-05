@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -16,26 +15,14 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Divider
-import androidx.compose.material.DropdownMenu
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.LocalContentAlpha
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
 import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
@@ -56,25 +43,22 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             DebugAssistantTheme {
-                Scaffold(topBar = {
-                    AppBar {
-                        mainViewModel.onLicensesMenuClicked(this)
-                    }
-                }) {
-                    // A surface container using the 'background' color from the theme
-                    Surface(
-                        modifier = Modifier.fillMaxSize(),
-                        color = MaterialTheme.colors.background
-                    ) {
+                Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            title = { Text(stringResource(id = R.string.app_name)) },
+                        )
+                    },
+                    content = {
                         Column(Modifier.padding(16.dp)) {
                             val isPermissionGranted = mainViewModel.isPermissionGranted.collectAsState()
                             if (!isPermissionGranted.value) {
                                 PermissionErrorMessage(onAdbCommandClicked = {
                                     mainViewModel.onAdbCommandClicked()
                                 })
-                            }
 
-                            Spacer(modifier = Modifier.height(16.dp))
+                                Spacer(modifier = Modifier.height(16.dp))
+                            }
 
                             val proxyHost = mainViewModel.proxyHostFlow.collectAsState()
                             val proxyPort = mainViewModel.proxyPortFlow.collectAsState()
@@ -96,16 +80,27 @@ class MainActivity : ComponentActivity() {
                             )
 
                             Spacer(modifier = Modifier.height(16.dp))
+
                             val isAdbEnabled = mainViewModel.isAdbEnabled.collectAsState()
-                            AdbSwitch(
-                                enabled = isPermissionGranted.value,
-                                checked = isAdbEnabled.value,
-                            ) {
-                                mainViewModel.onAdbSwitchClicked(it)
-                            }
+                            AdbSection(
+                                isPermissionGranted = isPermissionGranted.value,
+                                isAdbEnabled = isAdbEnabled.value,
+                                onAdbSwitchClicked = {
+                                    mainViewModel.onAdbSwitchClicked(it)
+                                }
+                            )
+
+                            Spacer(modifier = Modifier.height(16.dp))
+
+                            AboutSection(
+                                onHowToUseButtonClicked = {},
+                                onLicensesButtonClicked = {
+                                    mainViewModel.onLicensesButtonClicked()
+                                }
+                            )
                         }
                     }
-                }
+                )
             }
         }
     }
@@ -121,7 +116,11 @@ class MainActivity : ComponentActivity() {
 fun DefaultPreview() {
     DebugAssistantTheme {
         Scaffold(
-            topBar = { AppBar { } },
+            topBar = {
+                TopAppBar(
+                    title = { Text(stringResource(id = R.string.app_name)) },
+                )
+            },
             content = {
                 Column(Modifier.padding(16.dp)) {
                     PermissionErrorMessage {}
@@ -136,34 +135,25 @@ fun DefaultPreview() {
                         isProxyEnabled = true,
                         onProxySwitchClicked = {}
                     )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    AdbSection(
+                        isPermissionGranted = true,
+                        isAdbEnabled = true,
+                        onAdbSwitchClicked = {}
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    AboutSection(
+                        onHowToUseButtonClicked = {},
+                        onLicensesButtonClicked = {}
+                    )
                 }
             }
         )
     }
-}
-
-@Composable
-fun AppBar(licensesClicked: () -> Unit) {
-    var showMenu by remember { mutableStateOf(false) }
-    TopAppBar(
-        title = { Text(stringResource(id = R.string.app_name)) },
-        actions = {
-            IconButton(onClick = { showMenu = !showMenu }) {
-                Icon(Icons.Default.MoreVert, "Menu")
-            }
-            DropdownMenu(
-                expanded = showMenu,
-                onDismissRequest = { showMenu = false }
-            ) {
-                DropdownMenuItem(onClick = {
-                    showMenu = false
-                    licensesClicked()
-                }) {
-                    Text(stringResource(id = R.string.licenses))
-                }
-            }
-        },
-    )
 }
 
 @Composable
@@ -219,7 +209,7 @@ fun ProxySection(
             }
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(4.dp))
 
         ProxyToggleSwitch(
             enabled = isPermissionGranted && proxyHost.isNotEmpty() && proxyPort.isNotEmpty(),
@@ -280,6 +270,25 @@ fun ProxyToggleSwitch(enabled: Boolean, checked: Boolean, onCheckedChange: (Bool
 }
 
 @Composable
+fun AdbSection(
+    isPermissionGranted: Boolean,
+    isAdbEnabled: Boolean,
+    onAdbSwitchClicked: (Boolean) -> Unit,
+) {
+    Column {
+        Text(
+            "Settings.Global.ADB_ENABLED", fontSize = 18.sp
+        )
+        Spacer(modifier = Modifier.height(3.dp))
+        Divider()
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        AdbSwitch(enabled = isPermissionGranted, checked = isAdbEnabled, onCheckedChange = onAdbSwitchClicked)
+    }
+}
+
+@Composable
 fun AdbSwitch(enabled: Boolean, checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
     val alpha = if (enabled) LocalContentAlpha.current else ContentAlpha.disabled
 
@@ -297,5 +306,29 @@ fun AdbSwitch(enabled: Boolean, checked: Boolean, onCheckedChange: (Boolean) -> 
         Text(text = "Adb", modifier = Modifier.alpha(alpha))
         Spacer(modifier = Modifier.width(8.dp))
         Switch(enabled = enabled, checked = checked, onCheckedChange = null)
+    }
+}
+
+@Composable
+fun AboutSection(
+    onHowToUseButtonClicked: () -> Unit,
+    onLicensesButtonClicked: () -> Unit,
+) {
+    Column {
+        Text(
+            "About", fontSize = 18.sp
+        )
+        Spacer(modifier = Modifier.height(3.dp))
+        Divider()
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Button(onClick = onHowToUseButtonClicked) {
+            Text("How to use")
+        }
+        Spacer(modifier = Modifier.height(4.dp))
+        Button(onClick = onLicensesButtonClicked) {
+            Text("Open source licenses")
+        }
     }
 }
