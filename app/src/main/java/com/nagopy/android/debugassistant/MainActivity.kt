@@ -1,9 +1,6 @@
 package com.nagopy.android.debugassistant
 
 import android.os.Bundle
-import android.view.ContextMenu
-import android.view.MenuItem
-import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
@@ -18,6 +15,7 @@ import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ContentAlpha
+import androidx.compose.material.Divider
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
@@ -46,6 +44,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.nagopy.android.debugassistant.ui.theme.DebugAssistantTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -57,9 +56,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             DebugAssistantTheme {
-                Scaffold(topBar = { AppBar {
-                    mainViewModel.onLicensesMenuClicked(this)
-                }}) {
+                Scaffold(topBar = {
+                    AppBar {
+                        mainViewModel.onLicensesMenuClicked(this)
+                    }
+                }) {
                     // A surface container using the 'background' color from the theme
                     Surface(
                         modifier = Modifier.fillMaxSize(),
@@ -76,34 +77,23 @@ class MainActivity : ComponentActivity() {
                             Spacer(modifier = Modifier.height(16.dp))
 
                             val proxyHost = mainViewModel.proxyHostFlow.collectAsState()
-                            ProxyHost(
-                                enabled = isPermissionGranted.value,
-                                value = proxyHost.value,
-                                onValueChanged = {
-                                    mainViewModel.proxyHostFlow.value = it
-                                }
-                            )
-
-                            Spacer(modifier = Modifier.height(8.dp))
-
                             val proxyPort = mainViewModel.proxyPortFlow.collectAsState()
-                            ProxyPort(
-                                enabled = isPermissionGranted.value,
-                                value = proxyPort.value,
-                                onValueChanged = {
+                            val isProxyEnabled = mainViewModel.isProxyEnabled.collectAsState()
+                            ProxySection(
+                                isPermissionGranted = isPermissionGranted.value,
+                                proxyHost = proxyHost.value,
+                                onProxyHostChanged = {
+                                    mainViewModel.proxyHostFlow.value = it
+                                },
+                                proxyPort = proxyPort.value,
+                                onProxyPortChanged = {
                                     mainViewModel.proxyPortFlow.value = it
+                                },
+                                isProxyEnabled = isProxyEnabled.value,
+                                onProxySwitchClicked = {
+                                    mainViewModel.onProxySwitchClicked(it)
                                 }
                             )
-
-                            Spacer(modifier = Modifier.height(16.dp))
-
-                            val isProxyEnabled = mainViewModel.isProxyEnabled.collectAsState()
-                            ProxyToggleSwitch(
-                                enabled = isPermissionGranted.value && proxyHost.value.isNotEmpty() && proxyPort.value.isNotEmpty(),
-                                checked = isProxyEnabled.value,
-                            ) {
-                                mainViewModel.onProxySwitchClicked(it)
-                            }
 
                             Spacer(modifier = Modifier.height(16.dp))
                             val isAdbEnabled = mainViewModel.isAdbEnabled.collectAsState()
@@ -136,12 +126,16 @@ fun DefaultPreview() {
                 Column(Modifier.padding(16.dp)) {
                     PermissionErrorMessage {}
                     Spacer(modifier = Modifier.height(16.dp))
-                    ProxyHost(true, "test") {}
-                    Spacer(modifier = Modifier.height(8.dp))
-                    ProxyPort(true, "9999") {}
 
-                    Spacer(modifier = Modifier.height(16.dp))
-                    ProxyToggleSwitch(enabled = true, checked = true) {}
+                    ProxySection(
+                        isPermissionGranted = true,
+                        proxyHost = "localhost",
+                        onProxyHostChanged = {},
+                        proxyPort = "8888",
+                        onProxyPortChanged = {},
+                        isProxyEnabled = true,
+                        onProxySwitchClicked = {}
+                    )
                 }
             }
         )
@@ -184,6 +178,54 @@ fun PermissionErrorMessage(onAdbCommandClicked: () -> Unit) {
             Text(
                 text = "adb shell pm grant ${BuildConfig.APPLICATION_ID} android.permission.WRITE_SECURE_SETTINGS",
             )
+        }
+    }
+}
+
+@Composable
+fun ProxySection(
+    isPermissionGranted: Boolean,
+    proxyHost: String,
+    onProxyHostChanged: (String) -> Unit,
+    proxyPort: String,
+    onProxyPortChanged: (String) -> Unit,
+    isProxyEnabled: Boolean,
+    onProxySwitchClicked: (Boolean) -> Unit,
+) {
+    Column {
+        Text(
+            "Settings.Global.HTTP_PROXY", fontSize = 18.sp
+        )
+        Spacer(modifier = Modifier.height(3.dp))
+        Divider()
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        ProxyHost(
+            enabled = isPermissionGranted,
+            value = proxyHost,
+            onValueChanged = {
+                onProxyHostChanged(it)
+            }
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        ProxyPort(
+            enabled = isPermissionGranted,
+            value = proxyPort,
+            onValueChanged = {
+                onProxyPortChanged(it)
+            }
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        ProxyToggleSwitch(
+            enabled = isPermissionGranted && proxyHost.isNotEmpty() && proxyPort.isNotEmpty(),
+            checked = isProxyEnabled,
+        ) {
+            onProxySwitchClicked(it)
         }
     }
 }
