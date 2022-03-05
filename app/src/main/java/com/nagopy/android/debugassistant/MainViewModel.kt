@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.app.Application
 import android.content.Intent
+import android.net.Uri
 import androidx.core.app.ShareCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -107,6 +108,15 @@ class MainViewModel(
         }
 
         updateAdbStatus()
+    }
+
+    fun onHowToUseButtonClicked() {
+        getApplication<Application>().let { application ->
+            application.startActivity(
+                Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/75py/DebugAssistant#install"))
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            )
+        }
     }
 
     fun onLicensesButtonClicked() {

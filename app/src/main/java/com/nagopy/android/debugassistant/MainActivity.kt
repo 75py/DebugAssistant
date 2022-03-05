@@ -93,7 +93,9 @@ class MainActivity : ComponentActivity() {
                             Spacer(modifier = Modifier.height(16.dp))
 
                             AboutSection(
-                                onHowToUseButtonClicked = {},
+                                onHowToUseButtonClicked = {
+                                    mainViewModel.onHowToUseButtonClicked()
+                                },
                                 onLicensesButtonClicked = {
                                     mainViewModel.onLicensesButtonClicked()
                                 }
