@@ -1,7 +1,6 @@
 package com.nagopy.android.debugassistant
 
 import android.Manifest
-import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import android.net.Uri
@@ -19,8 +18,9 @@ import com.nagopy.android.debugassistant.usecase.GetPermissionStatusUseCase
 import com.nagopy.android.debugassistant.usecase.GetProxyStatusUseCase
 import com.nagopy.android.debugassistant.usecase.GetUserProxyInfoUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 
 class MainViewModel(
     application: Application,
@@ -35,29 +35,25 @@ class MainViewModel(
     private val userPreferencesRepository: UserPreferencesRepository, // TODO どうするか考える
 ) : AndroidViewModel(application) {
 
-    val proxyHostFlow: MutableStateFlow<String>
-    val proxyPortFlow: MutableStateFlow<String>
+    private val _viewModelState = MutableStateFlow(MainViewModelState(isLoading = true))
+    val viewModelState = _viewModelState.stateIn(viewModelScope, SharingStarted.Eagerly, _viewModelState.value)
 
     init {
         val proxyInfo = getUserProxyInfoUseCase.getUserProxyInfo()
-        proxyHostFlow = MutableStateFlow(proxyInfo.host)
-        proxyPortFlow = MutableStateFlow(proxyInfo.port)
-
-        viewModelScope.launch {
-            proxyHostFlow.collect {
-                userPreferencesRepository.proxyHost = it
-            }
-        }
-        viewModelScope.launch {
-            proxyPortFlow.collect {
-                userPreferencesRepository.proxyPort = it
-            }
+        val isPermissionGranted = getPermissionStatusUseCase.isPermissionGranted(Manifest.permission.WRITE_SECURE_SETTINGS)
+        val isProxyEnabled = getProxyStatusUseCase.isProxyEnabled()
+        val isAdbEnabled = getAdbStatusUseCase.isAdbEnabled()
+        _viewModelState.update {
+            it.copy(
+                isLoading = false,
+                proxyHost = proxyInfo.host,
+                proxyPort = proxyInfo.port,
+                isPermissionGranted = isPermissionGranted,
+                isProxyEnabled = isProxyEnabled,
+                isAdbEnabled = isAdbEnabled,
+            )
         }
     }
-
-    val isPermissionGranted = MutableStateFlow(false)
-    val isProxyEnabled = MutableStateFlow(false)
-    val isAdbEnabled = MutableStateFlow(false)
 
     fun updateStatus() {
         updatePermissionStatus()
@@ -66,16 +62,27 @@ class MainViewModel(
     }
 
     private fun updateProxyStatus() {
-        isProxyEnabled.value = getProxyStatusUseCase.isProxyEnabled()
+        _viewModelState.update {
+            it.copy(
+                isProxyEnabled = getProxyStatusUseCase.isProxyEnabled()
+            )
+        }
     }
 
     private fun updateAdbStatus() {
-        isAdbEnabled.value = getAdbStatusUseCase.isAdbEnabled()
+        _viewModelState.update {
+            it.copy(
+                isAdbEnabled = getAdbStatusUseCase.isAdbEnabled()
+            )
+        }
     }
 
     private fun updatePermissionStatus() {
-        isPermissionGranted.value =
-            getPermissionStatusUseCase.isPermissionGranted(Manifest.permission.WRITE_SECURE_SETTINGS)
+        _viewModelState.update {
+            it.copy(
+                isPermissionGranted = getPermissionStatusUseCase.isPermissionGranted(Manifest.permission.WRITE_SECURE_SETTINGS)
+            )
+        }
     }
 
     fun onAdbCommandClicked() {
@@ -90,9 +97,27 @@ class MainViewModel(
         }
     }
 
+    fun onProxyHostChanged(newValue: String) {
+        userPreferencesRepository.proxyHost = newValue
+        _viewModelState.update {
+            it.copy(
+                proxyHost = newValue
+            )
+        }
+    }
+
+    fun onProxyPortChanged(newValue: String) {
+        userPreferencesRepository.proxyPort = newValue
+        _viewModelState.update {
+            it.copy(
+                proxyPort = newValue
+            )
+        }
+    }
+
     fun onProxySwitchClicked(checked: Boolean) {
         if (checked) {
-            enableProxyUseCase.enableProxy(proxyHostFlow.value, proxyPortFlow.value)
+            enableProxyUseCase.enableProxy(viewModelState.value.proxyHost, viewModelState.value.proxyPort)
         } else {
             disableProxyUseCase.disableProxy()
         }
@@ -128,3 +153,12 @@ class MainViewModel(
         }
     }
 }
+
+data class MainViewModelState(
+    val isLoading: Boolean,
+    val proxyHost: String = "",
+    val proxyPort: String = "",
+    val isPermissionGranted: Boolean = false,
+    val isProxyEnabled: Boolean = false,
+    val isAdbEnabled: Boolean = false,
+)

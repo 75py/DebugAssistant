@@ -50,57 +50,21 @@ class MainActivity : ComponentActivity() {
                         )
                     },
                     content = {
-                        Column(Modifier.padding(16.dp)) {
-                            val isPermissionGranted = mainViewModel.isPermissionGranted.collectAsState()
-                            if (!isPermissionGranted.value) {
-                                PermissionErrorMessage(onAdbCommandClicked = {
-                                    mainViewModel.onAdbCommandClicked()
-                                })
-
-                                Spacer(modifier = Modifier.height(16.dp))
-                            }
-
-                            val proxyHost = mainViewModel.proxyHostFlow.collectAsState()
-                            val proxyPort = mainViewModel.proxyPortFlow.collectAsState()
-                            val isProxyEnabled = mainViewModel.isProxyEnabled.collectAsState()
-                            ProxySection(
-                                isPermissionGranted = isPermissionGranted.value,
-                                proxyHost = proxyHost.value,
-                                onProxyHostChanged = {
-                                    mainViewModel.proxyHostFlow.value = it
-                                },
-                                proxyPort = proxyPort.value,
-                                onProxyPortChanged = {
-                                    mainViewModel.proxyPortFlow.value = it
-                                },
-                                isProxyEnabled = isProxyEnabled.value,
-                                onProxySwitchClicked = {
-                                    mainViewModel.onProxySwitchClicked(it)
-                                }
-                            )
-
-                            Spacer(modifier = Modifier.height(16.dp))
-
-                            val isAdbEnabled = mainViewModel.isAdbEnabled.collectAsState()
-                            AdbSection(
-                                isPermissionGranted = isPermissionGranted.value,
-                                isAdbEnabled = isAdbEnabled.value,
-                                onAdbSwitchClicked = {
-                                    mainViewModel.onAdbSwitchClicked(it)
-                                }
-                            )
-
-                            Spacer(modifier = Modifier.height(16.dp))
-
-                            AboutSection(
-                                onHowToUseButtonClicked = {
-                                    mainViewModel.onHowToUseButtonClicked()
-                                },
-                                onLicensesButtonClicked = {
-                                    mainViewModel.onLicensesButtonClicked()
-                                }
-                            )
-                        }
+                        val state = mainViewModel.viewModelState.collectAsState().value
+                        MainScreen(
+                            proxyHost = state.proxyHost,
+                            proxyPort = state.proxyPort,
+                            isPermissionGranted = state.isPermissionGranted,
+                            isProxyEnabled = state.isProxyEnabled,
+                            isAdbEnabled = state.isAdbEnabled,
+                            onAdbCommandClicked = { mainViewModel.onAdbCommandClicked() },
+                            onProxyHostChanged = { mainViewModel.onProxyHostChanged(it) },
+                            onProxyPortChanged = { mainViewModel.onProxyPortChanged(it) },
+                            onProxySwitchClicked = { mainViewModel.onProxySwitchClicked(it) },
+                            onAdbSwitchClicked = { mainViewModel.onAdbSwitchClicked(it) },
+                            onHowToUseButtonClicked = { mainViewModel.onHowToUseButtonClicked() },
+                            onLicensesButtonClicked = { mainViewModel.onLicensesButtonClicked() },
+                        )
                     }
                 )
             }
@@ -124,36 +88,70 @@ fun DefaultPreview() {
                 )
             },
             content = {
-                Column(Modifier.padding(16.dp)) {
-                    PermissionErrorMessage {}
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    ProxySection(
-                        isPermissionGranted = true,
-                        proxyHost = "localhost",
-                        onProxyHostChanged = {},
-                        proxyPort = "8888",
-                        onProxyPortChanged = {},
-                        isProxyEnabled = true,
-                        onProxySwitchClicked = {}
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    AdbSection(
-                        isPermissionGranted = true,
-                        isAdbEnabled = true,
-                        onAdbSwitchClicked = {}
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    AboutSection(
-                        onHowToUseButtonClicked = {},
-                        onLicensesButtonClicked = {}
-                    )
-                }
+                MainScreen(
+                    proxyHost = "host",
+                    proxyPort = "port",
+                    isPermissionGranted = false,
+                    isProxyEnabled = true,
+                    isAdbEnabled = true,
+                    onAdbCommandClicked = {},
+                    onProxyHostChanged = {},
+                    onProxyPortChanged = {},
+                    onProxySwitchClicked = {},
+                    onAdbSwitchClicked = {},
+                    onHowToUseButtonClicked = {},
+                    onLicensesButtonClicked = {},
+                )
             }
+        )
+    }
+}
+
+@Composable
+fun MainScreen(
+    proxyHost: String,
+    proxyPort: String,
+    isPermissionGranted: Boolean,
+    isProxyEnabled: Boolean,
+    isAdbEnabled: Boolean,
+    onAdbCommandClicked: () -> Unit,
+    onProxyHostChanged: (String) -> Unit,
+    onProxyPortChanged: (String) -> Unit,
+    onProxySwitchClicked: (Boolean) -> Unit,
+    onAdbSwitchClicked: (Boolean) -> Unit,
+    onHowToUseButtonClicked: () -> Unit,
+    onLicensesButtonClicked: () -> Unit,
+) {
+    Column(Modifier.padding(16.dp)) {
+        if (!isPermissionGranted) {
+            PermissionErrorMessage(onAdbCommandClicked = onAdbCommandClicked)
+
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+
+        ProxySection(
+            isPermissionGranted = isPermissionGranted,
+            proxyHost = proxyHost,
+            onProxyHostChanged = onProxyHostChanged,
+            proxyPort = proxyPort,
+            onProxyPortChanged = onProxyPortChanged,
+            isProxyEnabled = isProxyEnabled,
+            onProxySwitchClicked = onProxySwitchClicked,
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        AdbSection(
+            isPermissionGranted = isPermissionGranted,
+            isAdbEnabled = isAdbEnabled,
+            onAdbSwitchClicked = onAdbSwitchClicked
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        AboutSection(
+            onHowToUseButtonClicked = onHowToUseButtonClicked,
+            onLicensesButtonClicked = onLicensesButtonClicked,
         )
     }
 }
