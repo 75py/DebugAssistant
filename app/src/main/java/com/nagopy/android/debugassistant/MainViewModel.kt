@@ -8,7 +8,7 @@ import androidx.core.app.ShareCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
-import com.nagopy.android.debugassistant.repository.UserPreferencesRepository
+import com.nagopy.android.debugassistant.domain.ProxyInfo
 import com.nagopy.android.debugassistant.usecase.DisableAdbUseCase
 import com.nagopy.android.debugassistant.usecase.DisableProxyUseCase
 import com.nagopy.android.debugassistant.usecase.EnableAdbUseCase
@@ -17,6 +17,7 @@ import com.nagopy.android.debugassistant.usecase.GetAdbStatusUseCase
 import com.nagopy.android.debugassistant.usecase.GetPermissionStatusUseCase
 import com.nagopy.android.debugassistant.usecase.GetProxyStatusUseCase
 import com.nagopy.android.debugassistant.usecase.GetUserProxyInfoUseCase
+import com.nagopy.android.debugassistant.usecase.PutUserProxyInfoUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
@@ -31,8 +32,8 @@ class MainViewModel(
     private val enableAdbUseCase: EnableAdbUseCase,
     private val disableAdbUseCase: DisableAdbUseCase,
     private val getPermissionStatusUseCase: GetPermissionStatusUseCase,
-    private val getUserProxyInfoUseCase: GetUserProxyInfoUseCase,
-    private val userPreferencesRepository: UserPreferencesRepository, // TODO どうするか考える
+    getUserProxyInfoUseCase: GetUserProxyInfoUseCase,
+    private val putUserProxyInfoUseCase: PutUserProxyInfoUseCase,
 ) : AndroidViewModel(application) {
 
     private val _viewModelState = MutableStateFlow(MainViewModelState(isLoading = true))
@@ -98,7 +99,7 @@ class MainViewModel(
     }
 
     fun onProxyHostChanged(newValue: String) {
-        userPreferencesRepository.proxyHost = newValue
+        putUserProxyInfoUseCase.putUserProxyInfo(ProxyInfo(newValue, _viewModelState.value.proxyPort))
         _viewModelState.update {
             it.copy(
                 proxyHost = newValue
@@ -107,7 +108,7 @@ class MainViewModel(
     }
 
     fun onProxyPortChanged(newValue: String) {
-        userPreferencesRepository.proxyPort = newValue
+        putUserProxyInfoUseCase.putUserProxyInfo(ProxyInfo(_viewModelState.value.proxyHost, newValue))
         _viewModelState.update {
             it.copy(
                 proxyPort = newValue
