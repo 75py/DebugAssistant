@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DebugAssistant">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.main.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,7 +26,7 @@
         </activity>
 
         <service
-            android:name=".ProxyTileService"
+            android:name=".ui.tile.ProxyTileService"
             android:label="Proxy"
             android:exported="true"
             android:icon="@drawable/ic_proxy_tile"
@@ -37,7 +37,7 @@
         </service>
 
         <service
-            android:name=".AdbTileService"
+            android:name=".ui.tile.AdbTileService"
             android:label="Adb"
             android:exported="true"
             android:icon="@drawable/ic_adb_tile"
