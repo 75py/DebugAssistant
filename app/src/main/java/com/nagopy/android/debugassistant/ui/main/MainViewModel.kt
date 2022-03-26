@@ -37,7 +37,7 @@ class MainViewModel(
     private val putUserProxyInfoUseCase: PutUserProxyInfoUseCase,
 ) : AndroidViewModel(application) {
 
-    private val _viewModelState = MutableStateFlow(MainViewModelState(isLoading = true))
+    private val _viewModelState = MutableStateFlow(MainUiState(isLoading = true))
     val viewModelState = _viewModelState.stateIn(viewModelScope, SharingStarted.Eagerly, _viewModelState.value)
 
     init {
@@ -155,12 +155,3 @@ class MainViewModel(
         }
     }
 }
-
-data class MainViewModelState(
-    val isLoading: Boolean,
-    val proxyHost: String = "",
-    val proxyPort: String = "",
-    val isPermissionGranted: Boolean = false,
-    val isProxyEnabled: Boolean = false,
-    val isAdbEnabled: Boolean = false,
-)
