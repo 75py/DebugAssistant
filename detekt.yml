@@ -1,0 +1,15 @@
+complexity:
+  LongParameterList:
+    active: false
+  TooManyFunctions:
+    ignorePrivate: true
+
+naming:
+  FunctionNaming:
+    ignoreAnnotated: [ 'Composable' ]
+
+style:
+  MagicNumber:
+    ignorePropertyDeclaration: true
+  MaxLineLength:
+    maxLineLength: 140

@@ -14,7 +14,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -39,6 +38,17 @@ jobs:
     
     - name: Build with Gradle
       run: ./gradlew assembleDebug
-    
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
     - name: Test with Gradle
-      run: ./gradlew test --stacktrace
+      run: ./gradlew testDebugUnitTest --stacktrace
+
+  detekt:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: detekt with Gradle
+        run: ./gradlew detekt

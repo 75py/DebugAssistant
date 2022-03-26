@@ -3,7 +3,14 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'org.jlleitschuh.gradle.ktlint'
     id 'com.google.android.gms.oss-licenses-plugin'
+    id 'io.gitlab.arturbosch.detekt'
 }
+
+detekt {
+    buildUponDefaultConfig = true
+    config = files("$projectDir/../detekt.yml")
+}
+
 
 android {
     compileSdk 31
