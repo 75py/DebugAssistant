@@ -1,7 +1,7 @@
 package com.nagopy.android.debugassistant.domain.usecase.interactor
 
-import com.nagopy.android.debugassistant.domain.ProxyInfo
 import com.nagopy.android.debugassistant.data.repository.UserPreferencesRepository
+import com.nagopy.android.debugassistant.domain.ProxyInfo
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Before
