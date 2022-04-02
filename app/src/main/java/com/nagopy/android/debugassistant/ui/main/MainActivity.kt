@@ -168,7 +168,7 @@ fun MainScreen(
 fun PermissionErrorMessage(onAdbCommandClicked: () -> Unit) {
     Column {
         Text(
-            text = "WRITE_SECURE_SETTINGS is not granted.\nRun the following command:",
+            text = stringResource(id = R.string.permission_error),
             color = Color.Red
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -339,11 +339,11 @@ fun AboutSection(
         Spacer(modifier = Modifier.height(8.dp))
 
         Button(onClick = onHowToUseButtonClicked) {
-            Text("How to use")
+            Text(stringResource(id = R.string.how_to_use))
         }
         Spacer(modifier = Modifier.height(4.dp))
         Button(onClick = onLicensesButtonClicked) {
-            Text("Open source licenses")
+            Text(stringResource(id = R.string.licenses))
         }
     }
 }

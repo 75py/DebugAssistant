@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Debug Assistant</string>
-    <string name="licenses">Licenses</string>
+    <string name="permission_error">WRITE_SECURE_SETTINGS is not granted.\nRun the following command:</string>
+    <string name="how_to_use">How to use</string>
+    <string name="licenses">Open source licenses</string>
     <string name="caution_http_proxy">HTTP_PROXY may be managed by an administrator / organization. Please use this feature at your own risk.</string>
 </resources>
