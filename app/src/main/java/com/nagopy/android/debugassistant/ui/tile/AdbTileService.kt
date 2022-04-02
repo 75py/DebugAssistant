@@ -1,6 +1,7 @@
 package com.nagopy.android.debugassistant.ui.tile
 
 import android.Manifest
+import android.app.KeyguardManager
 import android.database.ContentObserver
 import android.net.Uri
 import android.os.Handler
@@ -20,6 +21,7 @@ class AdbTileService : TileService() {
     private val getAdbStatusUseCase: GetAdbStatusUseCase by inject()
     private val enableAdbUseCase: EnableAdbUseCase by inject()
     private val disableAdbUseCase: DisableAdbUseCase by inject()
+    private val keyguardManager: KeyguardManager by inject()
 
     private fun refresh() {
         qsTile.state =
@@ -57,7 +59,9 @@ class AdbTileService : TileService() {
                 disableAdbUseCase.disableAdb()
             }
             Tile.STATE_INACTIVE -> {
-                enableAdbUseCase.enableAdb()
+                if (!keyguardManager.isKeyguardLocked) {
+                    enableAdbUseCase.enableAdb()
+                }
             }
         }
         refresh()

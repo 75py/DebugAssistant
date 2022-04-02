@@ -1,6 +1,7 @@
 package com.nagopy.android.debugassistant.ui.tile
 
 import android.Manifest
+import android.app.KeyguardManager
 import android.database.ContentObserver
 import android.net.Uri
 import android.os.Handler
@@ -22,6 +23,7 @@ class ProxyTileService : TileService() {
     private val enableProUseCase: EnableProxyUseCase by inject()
     private val disableProxyUseCase: DisableProxyUseCase by inject()
     private val getUserProxyInfoUseCase: GetUserProxyInfoUseCase by inject()
+    private val keyguardManager: KeyguardManager by inject()
 
     private fun refresh() {
         qsTile.state =
@@ -61,11 +63,13 @@ class ProxyTileService : TileService() {
                 disableProxyUseCase.disableProxy()
             }
             Tile.STATE_INACTIVE -> {
-                val proxyInfo = getUserProxyInfoUseCase.getUserProxyInfo()
-                enableProUseCase.enableProxy(
-                    proxyInfo.host,
-                    proxyInfo.port
-                )
+                if (!keyguardManager.isKeyguardLocked) {
+                    val proxyInfo = getUserProxyInfoUseCase.getUserProxyInfo()
+                    enableProUseCase.enableProxy(
+                        proxyInfo.host,
+                        proxyInfo.port
+                    )
+                }
             }
         }
         refresh()
