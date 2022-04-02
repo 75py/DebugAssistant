@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Debug Assistant</string>
     <string name="licenses">Licenses</string>
+    <string name="caution_http_proxy">HTTP_PROXY may be managed by an administrator / organization. Please use this feature at your own risk.</string>
 </resources>

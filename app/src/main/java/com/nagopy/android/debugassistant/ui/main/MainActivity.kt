@@ -199,6 +199,13 @@ fun ProxySection(
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        Text(
+            text = stringResource(id = R.string.caution_http_proxy),
+            color = Color.Red,
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
         ProxyHost(
             enabled = isPermissionGranted,
             value = proxyHost,
