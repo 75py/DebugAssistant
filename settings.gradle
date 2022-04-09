@@ -15,3 +15,5 @@ dependencyResolutionManagement {
 rootProject.name = "Debug Assistant"
 include ':app'
 include ':data:repository'
+include ':domain:usecase'
+include ':domain:model'

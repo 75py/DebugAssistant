@@ -55,6 +55,8 @@ android {
 }
 
 dependencies {
+    implementation project(":domain:model")
+    implementation project(":domain:usecase")
     implementation project(":data:repository")
 
     implementation 'androidx.core:core-ktx:1.7.0'
