@@ -9,7 +9,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.nagopy.android.debugassistant.BuildConfig
-import com.nagopy.android.debugassistant.domain.ProxyInfo
+import com.nagopy.android.debugassistant.domain.model.ProxyInfo
 import com.nagopy.android.debugassistant.domain.usecase.DisableAdbUseCase
 import com.nagopy.android.debugassistant.domain.usecase.DisableProxyUseCase
 import com.nagopy.android.debugassistant.domain.usecase.EnableAdbUseCase
@@ -100,7 +100,12 @@ class MainViewModel(
     }
 
     fun onProxyHostChanged(newValue: String) {
-        putUserProxyInfoUseCase.putUserProxyInfo(ProxyInfo(newValue, _viewModelState.value.proxyPort))
+        putUserProxyInfoUseCase.putUserProxyInfo(
+            ProxyInfo(
+                newValue,
+                _viewModelState.value.proxyPort
+            )
+        )
         _viewModelState.update {
             it.copy(
                 proxyHost = newValue
@@ -109,7 +114,12 @@ class MainViewModel(
     }
 
     fun onProxyPortChanged(newValue: String) {
-        putUserProxyInfoUseCase.putUserProxyInfo(ProxyInfo(_viewModelState.value.proxyHost, newValue))
+        putUserProxyInfoUseCase.putUserProxyInfo(
+            ProxyInfo(
+                _viewModelState.value.proxyHost,
+                newValue
+            )
+        )
         _viewModelState.update {
             it.copy(
                 proxyPort = newValue
