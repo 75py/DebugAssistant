@@ -32,7 +32,7 @@ android {
 dependencies {
     implementation project(":domain:model")
     implementation project(":data:repository")
-    implementation "io.insert-koin:koin-android:3.1.5"
+    implementation "io.insert-koin:koin-android:3.1.6"
     testImplementation 'junit:junit:4.13.2'
     testImplementation "io.mockk:mockk:1.12.3"
     testImplementation 'org.jetbrains.kotlin:kotlin-test'

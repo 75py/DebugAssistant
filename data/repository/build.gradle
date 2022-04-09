@@ -30,6 +30,6 @@ android {
 }
 
 dependencies {
-    implementation "io.insert-koin:koin-android:3.1.5"
+    implementation "io.insert-koin:koin-android:3.1.6"
     implementation "androidx.security:security-crypto:1.0.0"
 }

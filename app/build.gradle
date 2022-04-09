@@ -81,7 +81,7 @@ dependencies {
 
     androidTestImplementation "io.mockk:mockk-android:1.12.3"
 
-    implementation "io.insert-koin:koin-android:3.1.5"
+    implementation "io.insert-koin:koin-android:3.1.6"
 
     implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
     def appcompat_version = "1.4.1"
