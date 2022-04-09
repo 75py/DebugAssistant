@@ -4,7 +4,7 @@ import android.content.ContentResolver
 import android.provider.Settings
 import com.nagopy.android.debugassistant.data.repository.GlobalSettingsRepository
 
-class GlobalSettingRepositoryImpl(private val resolver: ContentResolver) :
+internal class GlobalSettingRepositoryImpl(private val resolver: ContentResolver) :
     GlobalSettingsRepository {
 
     override fun putString(name: String, value: String?): Boolean {

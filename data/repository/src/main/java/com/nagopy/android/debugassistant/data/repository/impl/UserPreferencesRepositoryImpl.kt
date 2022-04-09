@@ -6,7 +6,7 @@ import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import com.nagopy.android.debugassistant.data.repository.UserPreferencesRepository
 
-class UserPreferencesRepositoryImpl(context: Context) : UserPreferencesRepository {
+internal class UserPreferencesRepositoryImpl(context: Context) : UserPreferencesRepository {
     private val sharedPreferences: SharedPreferences
 
     init {
