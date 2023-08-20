@@ -53,9 +53,10 @@ class MainActivity : ComponentActivity() {
                             title = { Text(stringResource(id = R.string.app_name)) },
                         )
                     },
-                    content = {
+                    content = { padding ->
                         val state = mainViewModel.viewModelState.collectAsState().value
                         MainScreen(
+                            modifier = Modifier.padding(padding),
                             proxyHost = state.proxyHost,
                             proxyPort = state.proxyPort,
                             isPermissionGranted = state.isPermissionGranted,
@@ -91,8 +92,9 @@ fun DefaultPreview() {
                     title = { Text(stringResource(id = R.string.app_name)) },
                 )
             },
-            content = {
+            content = { padding ->
                 MainScreen(
+                    modifier = Modifier.padding(padding),
                     proxyHost = "host",
                     proxyPort = "port",
                     isPermissionGranted = false,
@@ -113,6 +115,7 @@ fun DefaultPreview() {
 
 @Composable
 fun MainScreen(
+    modifier: Modifier = Modifier,
     proxyHost: String,
     proxyPort: String,
     isPermissionGranted: Boolean,
@@ -127,7 +130,7 @@ fun MainScreen(
     onLicensesButtonClicked: () -> Unit,
 ) {
     Column(
-        Modifier
+        modifier
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
     ) {
@@ -299,7 +302,11 @@ fun AdbSection(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        AdbSwitch(enabled = isPermissionGranted, checked = isAdbEnabled, onCheckedChange = onAdbSwitchClicked)
+        AdbSwitch(
+            enabled = isPermissionGranted,
+            checked = isAdbEnabled,
+            onCheckedChange = onAdbSwitchClicked
+        )
     }
 }
 
