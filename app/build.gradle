@@ -52,6 +52,8 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+    namespace 'com.nagopy.android.debugassistant'
+    testNamespace 'com.nagopy.android.debugassistant.androidtest'
 }
 
 dependencies {
