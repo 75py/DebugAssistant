@@ -30,16 +30,20 @@ class MainActivityKtTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
+    private interface OnAdbCommandClickedClass {
+        fun onClick()
+    }
+
     @Test
     fun permissionErrorMessage() {
-        val onClickAction: () -> Unit = mockk(relaxed = true)
+        val onAdbCommandClicked = mockk<OnAdbCommandClickedClass>(relaxed = true)
         composeTestRule.setContent {
-            PermissionErrorMessage(onClickAction)
+            PermissionErrorMessage{ onAdbCommandClicked.onClick() }
         }
         composeTestRule.onNode(hasClickAction())
             .performClick()
         verify {
-            onClickAction()
+            onAdbCommandClicked.onClick()
         }
     }
 

@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    compileSdk 31
+    compileSdk 34
 
     defaultConfig {
         minSdk 28
-        targetSdk 31
+        targetSdk 34
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -21,19 +21,20 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
+    namespace 'com.nagopy.android.debugassistant.domain.usecase'
 }
 
 dependencies {
     implementation project(":domain:model")
     implementation project(":data:repository")
-    implementation "io.insert-koin:koin-android:3.1.6"
+    implementation "io.insert-koin:koin-android:3.4.3"
     testImplementation 'junit:junit:4.13.2'
-    testImplementation "io.mockk:mockk:1.12.3"
+    testImplementation "io.mockk:mockk:1.13.7"
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
 }
