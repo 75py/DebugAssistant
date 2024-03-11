@@ -75,14 +75,14 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
 
-    testImplementation "io.mockk:mockk:1.13.9"
+    testImplementation "io.mockk:mockk:1.13.10"
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
 
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
     androidTestImplementation 'org.jetbrains.kotlin:kotlin-test'
 
-    androidTestImplementation "io.mockk:mockk-android:1.13.9"
+    androidTestImplementation "io.mockk:mockk-android:1.13.10"
 
     implementation "io.insert-koin:koin-android:3.5.3"
 
