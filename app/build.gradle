@@ -86,6 +86,6 @@ dependencies {
 
     implementation "io.insert-koin:koin-android:3.5.6"
 
-    implementation 'com.google.android.gms:play-services-oss-licenses:17.0.1'
+    implementation 'com.google.android.gms:play-services-oss-licenses:17.1.0'
     implementation "androidx.appcompat:appcompat:1.7.0"
 }
