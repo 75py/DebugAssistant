@@ -184,7 +184,7 @@
       comment syntax for the file format. We also recommend that a
       file or class name and description of purpose be included on the
       same "printed page" as the copyright notice for easier
-      identification within third-party archives.
+      identification within third-party archives.  
 
    Copyright [yyyy] [name of copyright owner]
 
@@ -199,3 +199,4 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
+adb shell pm grant com.nagopy.android.debugassistant android.permission.WRITE_SECURE_SETTINGS
