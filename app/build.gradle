@@ -14,12 +14,12 @@ detekt {
 
 
 android {
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
         applicationId "com.nagopy.android.debugassistant"
         minSdk 28
-        targetSdk 35
+        targetSdk 36
         versionCode 9
         versionName "1.1.3"
 
