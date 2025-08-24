@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    compileSdk 34
+    compileSdk 36
 
     defaultConfig {
         minSdk 28
-        targetSdk 34
+        targetSdk 36
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -31,6 +31,6 @@ android {
 }
 
 dependencies {
-    implementation "io.insert-koin:koin-android:3.4.3"
+    implementation "io.insert-koin:koin-android:3.5.6"
     implementation "androidx.security:security-crypto:1.0.0"
 }
