@@ -6,11 +6,11 @@ Debug Assistant is an Android application that helps Android developers by provi
 ## Tech Stack
 - **Language**: Kotlin
 - **Min SDK**: 28 (Android 9.0)
-- **Current SDK**: compileSdk 35, targetSdk 35
+- **Current SDK**: compileSdk 36, targetSdk 36
 - **Architecture**: Clean Architecture with MVVM
 - **UI Framework**: Jetpack Compose 1.8.0
 - **Dependency Injection**: Koin 3.5.6
-- **Build System**: Gradle with Android Gradle Plugin 8.8.0/8.9.2
+- **Build System**: Gradle with Android Gradle Plugin 8.10.1
 - **Testing**: JUnit, MockK, Compose Testing
 
 ## Project Structure

@@ -3,13 +3,21 @@ package com.nagopy.android.debugassistant.ui.main
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.text.KeyboardOptions
@@ -45,33 +53,27 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContent {
             DebugAssistantTheme {
-                Scaffold(
-                    topBar = {
-                        TopAppBar(
-                            title = { Text(stringResource(id = R.string.app_name)) },
-                        )
-                    },
-                    content = { padding ->
-                        val state = mainViewModel.viewModelState.collectAsState().value
-                        MainScreen(
-                            modifier = Modifier.padding(padding),
-                            proxyHost = state.proxyHost,
-                            proxyPort = state.proxyPort,
-                            isPermissionGranted = state.isPermissionGranted,
-                            isProxyEnabled = state.isProxyEnabled,
-                            isAdbEnabled = state.isAdbEnabled,
-                            onAdbCommandClicked = { mainViewModel.onAdbCommandClicked() },
-                            onProxyHostChanged = { mainViewModel.onProxyHostChanged(it) },
-                            onProxyPortChanged = { mainViewModel.onProxyPortChanged(it) },
-                            onProxySwitchClicked = { mainViewModel.onProxySwitchClicked(it) },
-                            onAdbSwitchClicked = { mainViewModel.onAdbSwitchClicked(it) },
-                            onHowToUseButtonClicked = { mainViewModel.onHowToUseButtonClicked() },
-                            onLicensesButtonClicked = { mainViewModel.onLicensesButtonClicked() },
-                        )
-                    }
-                )
+                val state = mainViewModel.viewModelState.collectAsState().value
+                MainScaffold { modifier ->
+                    MainScreen(
+                        modifier = modifier,
+                        proxyHost = state.proxyHost,
+                        proxyPort = state.proxyPort,
+                        isPermissionGranted = state.isPermissionGranted,
+                        isProxyEnabled = state.isProxyEnabled,
+                        isAdbEnabled = state.isAdbEnabled,
+                        onAdbCommandClicked = { mainViewModel.onAdbCommandClicked() },
+                        onProxyHostChanged = { mainViewModel.onProxyHostChanged(it) },
+                        onProxyPortChanged = { mainViewModel.onProxyPortChanged(it) },
+                        onProxySwitchClicked = { mainViewModel.onProxySwitchClicked(it) },
+                        onAdbSwitchClicked = { mainViewModel.onAdbSwitchClicked(it) },
+                        onHowToUseButtonClicked = { mainViewModel.onHowToUseButtonClicked() },
+                        onLicensesButtonClicked = { mainViewModel.onLicensesButtonClicked() },
+                    )
+                }
             }
         }
     }
@@ -82,34 +84,56 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@Composable
+private fun MainScaffold(content: @Composable (Modifier) -> Unit) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                modifier = Modifier.windowInsetsPadding(
+                    WindowInsets.safeDrawing.only(
+                        WindowInsetsSides.Top + WindowInsetsSides.Horizontal
+                    )
+                ),
+                title = { Text(stringResource(id = R.string.app_name)) },
+            )
+        },
+        content = { scaffoldPadding ->
+            content(
+                Modifier
+                    .padding(scaffoldPadding)
+                    .consumeWindowInsets(scaffoldPadding)
+                    .imePadding()
+                    .windowInsetsPadding(
+                        WindowInsets.safeDrawing.only(
+                            WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom
+                        )
+                    )
+            )
+        }
+    )
+}
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun DefaultPreview() {
     DebugAssistantTheme {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = { Text(stringResource(id = R.string.app_name)) },
-                )
-            },
-            content = { padding ->
-                MainScreen(
-                    modifier = Modifier.padding(padding),
-                    proxyHost = "host",
-                    proxyPort = "port",
-                    isPermissionGranted = false,
-                    isProxyEnabled = true,
-                    isAdbEnabled = true,
-                    onAdbCommandClicked = {},
-                    onProxyHostChanged = {},
-                    onProxyPortChanged = {},
-                    onProxySwitchClicked = {},
-                    onAdbSwitchClicked = {},
-                    onHowToUseButtonClicked = {},
-                    onLicensesButtonClicked = {},
-                )
-            }
-        )
+        MainScaffold { modifier ->
+            MainScreen(
+                modifier = modifier,
+                proxyHost = "host",
+                proxyPort = "port",
+                isPermissionGranted = false,
+                isProxyEnabled = true,
+                isAdbEnabled = true,
+                onAdbCommandClicked = {},
+                onProxyHostChanged = {},
+                onProxyPortChanged = {},
+                onProxySwitchClicked = {},
+                onAdbSwitchClicked = {},
+                onHowToUseButtonClicked = {},
+                onLicensesButtonClicked = {},
+            )
+        }
     }
 }
 
