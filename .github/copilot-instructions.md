@@ -8,7 +8,7 @@ Debug Assistant is an Android application designed to help Android developers by
 **Application ID:** `com.nagopy.android.debugassistant`  
 **Language:** Kotlin  
 **Min SDK:** 28 (Android 9.0)  
-**Target SDK:** 34 (Android 14)  
+**Target SDK:** 36 (Android 16)<br>
 **Architecture:** Clean Architecture with MVVM
 
 ## Project Structure
@@ -44,8 +44,8 @@ debugassistant/
 
 ### Core Technologies
 - **Kotlin**: Primary programming language
-- **Android SDK**: Target SDK 34, Min SDK 28
-- **Jetpack Compose**: Modern UI toolkit (`compose_version = '1.5.0'`)
+- **Android SDK**: Compile/Target SDK 36, Min SDK 28
+- **Jetpack Compose**: Modern UI toolkit (`compose_version = '1.8.0'`)
 - **Gradle**: Build system with Kotlin DSL support
 
 ### Architecture & Patterns
